@@ -1,9 +1,9 @@
 import os
 import sys
-import customtkinter as ctk
-from tkinter import messagebox
-import cmath
-import math
+import customtkinter as ctk     # CustomTkinter for å style GUI
+from tkinter import messagebox  # For å vise feilmeldinger
+import cmath    # For komplekse tall
+import math     # For matematiske funksjoner
 
 # Konfigurer CustomTkinter
 ctk.set_appearance_mode("Dark")  # "System", "Dark", "Light"
@@ -43,43 +43,43 @@ class KalkulatorApp:
         venstre_ramme.configure(fg_color="transparent")
 
         # Høyre ramme for notater
-        hoyre_ramme = ctk.CTkFrame(hovedramme)
-        hoyre_ramme.pack(side="right", fill="both", expand=True, padx=0, pady=0)
-        hoyre_ramme.configure(fg_color="transparent")
+        hoyre_ramme = ctk.CTkFrame(hovedramme)  
+        hoyre_ramme.pack(side="right", fill="both", expand=True, padx=0, pady=0)    
+        hoyre_ramme.configure(fg_color="transparent")   
 
         # Ramme for valg av strømtype og beregning
-        self.valg_ramme = ctk.CTkFrame(venstre_ramme)
-        self.valg_ramme.pack(pady=5)
-        self.valg_ramme.configure(fg_color="transparent")
+        valg_ramme = ctk.CTkFrame(venstre_ramme)
+        valg_ramme.pack(pady=5)
+        valg_ramme.configure(fg_color="transparent")
         
         # Valg for strømtype
-        ctk.CTkLabel(self.valg_ramme, text="Velg strømtype:", font=("Arial", 14, "bold")).pack(pady=1)  
-        self.kalkvalg = ctk.CTkComboBox(self.valg_ramme, values=["DC", "AC"], command=self.oppdater_kalkulator)
-        self.kalkvalg.pack(pady=5)
-        self.kalkvalg.set("DC")
+        ctk.CTkLabel(valg_ramme, text="Velg strømtype:", font=("Arial", 14, "bold")).pack(pady=1)  
+        self.kalk_valg = ctk.CTkComboBox(valg_ramme, values=["DC", "AC"], command=self.oppdater_kalkulator)
+        self.kalk_valg.pack(pady=5)
+        self.kalk_valg.set("DC")
 
         # Valg av beregning
-        ctk.CTkLabel(self.valg_ramme, text="Velg beregning:", font=("Arial", 14, "bold")).pack(pady=1)
-        self.beregningsvalg = ctk.CTkComboBox(self.valg_ramme, values=["Ohms lov", "Seriekobling", "Parallellkobling", "VDR", "CDR"], command=self.oppdater_beregning)
+        ctk.CTkLabel(valg_ramme, text="Velg beregning:", font=("Arial", 14, "bold")).pack(pady=1)
+        self.beregningsvalg = ctk.CTkComboBox(valg_ramme, values=["Ohms lov", "Seriekobling", "Parallellkobling", "VDR", "CDR"], command=self.oppdater_beregning)
         self.beregningsvalg.pack(pady=5)
         self.beregningsvalg.set("Ohms lov")
 
         # Valg for form (kun for AC)
-        self.form_label = ctk.CTkLabel(self.valg_ramme, text="Velg form:", font=("Arial", 14, "bold"))
-        self.form_valg = ctk.CTkComboBox(self.valg_ramme, values=["Polar", "Rektangulær"], command=self.oppdater_beregning)
+        self.form_label = ctk.CTkLabel(valg_ramme, text="Velg form:", font=("Arial", 14, "bold"))
+        self.form_valg = ctk.CTkComboBox(valg_ramme, values=["Polar", "Rektangulær"], command=self.oppdater_beregning)
         self.form_label.pack_forget()  # Skjult som standard for DC
         self.form_valg.pack_forget()
 
         # Valg for komponent (kun for AC)
-        self.komponent_label = ctk.CTkLabel(self.valg_ramme, text="Velg komponent:", font=("Arial", 14, "bold"))
-        self.komponent_valg = ctk.CTkComboBox(self.valg_ramme, values=["Kondensator", "Spole"], command=self.oppdater_beregning)
+        self.komponent_label = ctk.CTkLabel(valg_ramme, text="Velg komponent:", font=("Arial", 14, "bold"))
+        self.komponent_valg = ctk.CTkComboBox(valg_ramme, values=["Kondensator", "Spole"], command=self.oppdater_beregning)
         self.komponent_label.pack_forget()
         self.komponent_valg.pack_forget()
 
         # Ramme for input-felt
-        self.input_frame = ctk.CTkFrame(venstre_ramme)
-        self.input_frame.pack(pady=10)
-        self.input_frame.configure(fg_color="transparent")
+        self.input_ramme = ctk.CTkFrame(venstre_ramme)
+        self.input_ramme.pack(pady=10)
+        self.input_ramme.configure(fg_color="transparent")
 
         # Resultat-etikett
         self.resultat_label = ctk.CTkLabel(venstre_ramme, text="Resultat:", font=("Arial", 12))
@@ -133,11 +133,11 @@ class KalkulatorApp:
 
     def oppdater_kalkulator(self, event=None): 
         """Oppdater kalkulatortype og beregning basert på valgt strømtype."""
-        kalk_type = self.kalkvalg.get()
+        kalk_type = self.kalk_valg.get()
         beregning = self.beregningsvalg.get()
 
         # Fjern eksisterende inputfelt
-        for widget in self.input_frame.winfo_children():
+        for widget in self.input_ramme.winfo_children():
             widget.destroy()
 
         if kalk_type == "DC":
@@ -160,15 +160,13 @@ class KalkulatorApp:
 
     def oppdater_beregning(self, event=None):
         """Oppdater input-felt basert på valgt beregning og strømtype."""
-        for widget in self.input_frame.winfo_children():
+        for widget in self.input_ramme.winfo_children():
             widget.destroy()
-
             
         if hasattr(self, 'form_valg'):  # Sjekk om form-valgboksen allerede finnes og skjul den om nødvendig
             self.form_valg.pack_forget()  # Skjul den eksisterende komboboksen for formvalg hvis den finnes
-
-
-        kalk_type = self.kalkvalg.get()
+            
+        kalk_type = self.kalk_valg.get()
         beregning = self.beregningsvalg.get()
         self.resultat_label.configure(text="")
                     
@@ -182,111 +180,111 @@ class KalkulatorApp:
 
             if beregning == "Ohms lov":
                 # Ohms lov input-felt for DC
-                ctk.CTkLabel(self.input_frame, text="Spenning (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                self.u_input = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Spenning (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                self.u_input = ctk.CTkEntry(self.input_ramme)
                 self.u_input.grid(row=0, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Strøm (A):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                self.i_input = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Strøm (A):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                self.i_input = ctk.CTkEntry(self.input_ramme)
                 self.i_input.grid(row=1, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                self.r_input = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                self.r_input = ctk.CTkEntry(self.input_ramme)
                 self.r_input.grid(row=2, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Effekt (W):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                self.p_input = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Effekt (W):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                self.p_input = ctk.CTkEntry(self.input_ramme)
                 self.p_input.grid(row=3, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_ohms_lov)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_ohms_lov)
                 beregn_knapp.grid(row=4, column=0, columnspan=2, pady=20)
 
             elif beregning == "Seriekobling":
-                ctk.CTkLabel(self.input_frame, text="Motstand 1 (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                self.r_input1 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 1 (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                self.r_input1 = ctk.CTkEntry(self.input_ramme)
                 self.r_input1.grid(row=0, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 2 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                self.r_input2 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 2 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                self.r_input2 = ctk.CTkEntry(self.input_ramme)
                 self.r_input2.grid(row=1, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 3 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                self.r_input3 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 3 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                self.r_input3 = ctk.CTkEntry(self.input_ramme)
                 self.r_input3.grid(row=2, column=1, padx=10, pady=5)
                 
-                ctk.CTkLabel(self.input_frame, text="Motstand 4 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                self.r_input4 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 4 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                self.r_input4 = ctk.CTkEntry(self.input_ramme)
                 self.r_input4.grid(row=3, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_seriekobling)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_seriekobling)
                 beregn_knapp.grid(row=4, column=0, columnspan=2, pady=20)
 
             elif beregning == "Parallellkobling":
-                ctk.CTkLabel(self.input_frame, text="Motstand 1 (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                self.r_input1 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 1 (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                self.r_input1 = ctk.CTkEntry(self.input_ramme)
                 self.r_input1.grid(row=0, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 2 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                self.r_input2 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 2 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                self.r_input2 = ctk.CTkEntry(self.input_ramme)
                 self.r_input2.grid(row=1, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 3 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                self.r_input3 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 3 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                self.r_input3 = ctk.CTkEntry(self.input_ramme)
                 self.r_input3.grid(row=2, column=1, padx=10, pady=5)
                 
-                ctk.CTkLabel(self.input_frame, text="Motstand 4 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                self.r_input4 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 4 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                self.r_input4 = ctk.CTkEntry(self.input_ramme)
                 self.r_input4.grid(row=3, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_parallellkobling)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_parallellkobling)
                 beregn_knapp.grid(row=4, column=0, columnspan=2, pady=20)
 
             elif beregning == "VDR":
-                ctk.CTkLabel(self.input_frame, text="Inngangsspenning (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                self.vin_input = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Inngangsspenning (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                self.vin_input = ctk.CTkEntry(self.input_ramme)
                 self.vin_input.grid(row=0, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 1 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                self.r_input1 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 1 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                self.r_input1 = ctk.CTkEntry(self.input_ramme)
                 self.r_input1.grid(row=1, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 2 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                self.r_input2 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 2 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                self.r_input2 = ctk.CTkEntry(self.input_ramme)
                 self.r_input2.grid(row=2, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 3 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                self.r_input3 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 3 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                self.r_input3 = ctk.CTkEntry(self.input_ramme)
                 self.r_input3.grid(row=3, column=1, padx=10, pady=5)
                 
-                ctk.CTkLabel(self.input_frame, text="Motstand 4 (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                self.r_input4 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 4 (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                self.r_input4 = ctk.CTkEntry(self.input_ramme)
                 self.r_input4.grid(row=4, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_vdr)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_vdr)
                 beregn_knapp.grid(row=5, column=0, columnspan=2, pady=20)
 
             elif beregning == "CDR":
-                ctk.CTkLabel(self.input_frame, text="Inngangsstrøm (A):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                self.iin_input = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Inngangsstrøm (A):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                self.iin_input = ctk.CTkEntry(self.input_ramme)
                 self.iin_input.grid(row=0, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 1 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                self.r_input1 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 1 (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                self.r_input1 = ctk.CTkEntry(self.input_ramme)
                 self.r_input1.grid(row=1, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 2 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                self.r_input2 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 2 (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                self.r_input2 = ctk.CTkEntry(self.input_ramme)
                 self.r_input2.grid(row=2, column=1, padx=10, pady=5)
 
-                ctk.CTkLabel(self.input_frame, text="Motstand 3 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                self.r_input3 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 3 (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                self.r_input3 = ctk.CTkEntry(self.input_ramme)
                 self.r_input3.grid(row=3, column=1, padx=10, pady=5)
                 
-                ctk.CTkLabel(self.input_frame, text="Motstand 4 (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                self.r_input4 = ctk.CTkEntry(self.input_frame)
+                ctk.CTkLabel(self.input_ramme, text="Motstand 4 (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                self.r_input4 = ctk.CTkEntry(self.input_ramme)
                 self.r_input4.grid(row=4, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_cdr)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_cdr)
                 beregn_knapp.grid(row=5, column=0, columnspan=2, pady=20)
 
 
@@ -303,55 +301,55 @@ class KalkulatorApp:
                 self.form_label.pack(pady=5)  # Vis formetiketten for AC
                 self.form_valg.pack(pady=5)  # Vis komboboksen for formvalg for AC
                 if self.form_valg.get() == "Polar":
-                    ctk.CTkLabel(self.input_frame, text="Spenningens magnitude (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.u_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Spenningens magnitude (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.u_input = ctk.CTkEntry(self.input_ramme)
                     self.u_input.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Spenningens fase (grader):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.u_fase_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Spenningens fase (grader):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.u_fase_input = ctk.CTkEntry(self.input_ramme)
                     self.u_fase_input.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Strømmens magnitude (A):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.i_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Strømmens magnitude (A):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.i_input = ctk.CTkEntry(self.input_ramme)
                     self.i_input.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Strømmens fase (grader):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.i_fase_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Strømmens fase (grader):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.i_fase_input = ctk.CTkEntry(self.input_ramme)
                     self.i_fase_input.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedansens magnitude (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedansens magnitude (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input = ctk.CTkEntry(self.input_ramme)
                     self.r_input.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedansens fase (grader):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.z_fase_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedansens fase (grader):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.z_fase_input = ctk.CTkEntry(self.input_ramme)
                     self.z_fase_input.grid(row=5, column=1, padx=10, pady=5)
                 else:
-                    ctk.CTkLabel(self.input_frame, text="Spenningens reelle del (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.u_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Spenningens reelle del (V):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.u_input = ctk.CTkEntry(self.input_ramme)
                     self.u_input.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Spenningens imaginære del (V):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.u_fase_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Spenningens imaginære del (V):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.u_fase_input = ctk.CTkEntry(self.input_ramme)
                     self.u_fase_input.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Strømmens reelle del (A):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.i_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Strømmens reelle del (A):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.i_input = ctk.CTkEntry(self.input_ramme)
                     self.i_input.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Strømmens imaginære del (A):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.i_fase_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Strømmens imaginære del (A):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.i_fase_input = ctk.CTkEntry(self.input_ramme)
                     self.i_fase_input.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedansens reelle del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedansens reelle del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input = ctk.CTkEntry(self.input_ramme)
                     self.r_input.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedansens imaginære del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.z_fase_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedansens imaginære del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.z_fase_input = ctk.CTkEntry(self.input_ramme)
                     self.z_fase_input.grid(row=5, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_ohms_lov)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_ohms_lov)
                 beregn_knapp.grid(row=6, column=0, columnspan=2, pady=20)
                 
             elif beregning == "Seriekobling":
@@ -363,71 +361,71 @@ class KalkulatorApp:
                 self.form_label.pack(pady=5)  # Vis formetiketten for AC
                 self.form_valg.pack(pady=5)  # Vis komboboksen for formvalg for AC
                 if self.form_valg.get() == "Polar":
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 magnitude (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 magnitude (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 fase (grader):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 fase (grader):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 magnitude (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 magnitude (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 fase (grader):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 fase (grader):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 magnitude (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 magnitude (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input3 = ctk.CTkEntry(self.input_ramme)
                     self.r_input3.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 fase (grader):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 fase (grader):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input3 = ctk.CTkEntry(self.input_ramme)
                     self.p_input3.grid(row=5, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 magnitude (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 magnitude (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input4 = ctk.CTkEntry(self.input_ramme)
                     self.r_input4.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 fase (grader):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 fase (grader):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input4 = ctk.CTkEntry(self.input_ramme)
                     self.p_input4.grid(row=7, column=1, padx=10, pady=5)
                 else:
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 reell del (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 reell del (Ω):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 imaginær del (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 imaginær del (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 reell del (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 reell del (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 imaginær del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 imaginær del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 reell del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 reell del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input3 = ctk.CTkEntry(self.input_ramme)
                     self.r_input3.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 imaginær del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 imaginær del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input3 = ctk.CTkEntry(self.input_ramme)
                     self.p_input3.grid(row=5, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 reell del (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 reell del (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input4 = ctk.CTkEntry(self.input_ramme)
                     self.r_input4.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 imaginær del (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 imaginær del (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input4 = ctk.CTkEntry(self.input_ramme)
                     self.p_input4.grid(row=7, column=1, padx=10, pady=5)
                     
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_seriekobling)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_seriekobling)
                 beregn_knapp.grid(row=8, column=0, columnspan=2, pady=20)
                 
             elif beregning == "Parallellkobling":
@@ -441,74 +439,74 @@ class KalkulatorApp:
                 
                 if self.form_valg.get() == "Polar":
                     # Bruk grid til å plassere input-felt for polar form
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 magnitude (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 magnitude (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 fase (grader):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 fase (grader):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 magnitude (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 magnitude (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 fase (grader):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 fase (grader):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 magnitude (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 magnitude (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input3 = ctk.CTkEntry(self.input_ramme)
                     self.r_input3.grid(row=5, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 fase (grader):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 fase (grader):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input3 = ctk.CTkEntry(self.input_ramme)
                     self.p_input3.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 magnitude (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 magnitude (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input4 = ctk.CTkEntry(self.input_ramme)
                     self.r_input4.grid(row=7, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 fase (grader):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 fase (grader):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input4 = ctk.CTkEntry(self.input_ramme)
                     self.p_input4.grid(row=8, column=1, padx=10, pady=5)
+                    
                 else:
                     # Bruk grid til å plassere input-felt for rektangulær form
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 reell del (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 reell del (Ω):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 imaginær del (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 imaginær del (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 reell del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 reell del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 imaginær del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 imaginær del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 reell del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 reell del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input3 = ctk.CTkEntry(self.input_ramme)
                     self.r_input3.grid(row=5, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 imaginær del (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 imaginær del (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input3 = ctk.CTkEntry(self.input_ramme)
                     self.p_input3.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 reell del (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 reell del (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input4 = ctk.CTkEntry(self.input_ramme)
                     self.r_input4.grid(row=7, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 4 imaginær del (Ω):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input4 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 4 imaginær del (Ω):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input4 = ctk.CTkEntry(self.input_ramme)
                     self.p_input4.grid(row=8, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_parallellkobling)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn", command=self.beregn_parallellkobling)
                 beregn_knapp.grid(row=9, column=0, columnspan=2, pady=20)
-
 
             elif beregning == "VDR":
                 # Skjul komponent-valg og vis form-valg på samme sted
@@ -521,74 +519,74 @@ class KalkulatorApp:
                 
                 if self.form_valg.get() == "Polar":
                     # Input for Polar form
-                    ctk.CTkLabel(self.input_frame, text="Inngangsspenning magnitude (V):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.vin_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsspenning magnitude (V):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.vin_input = ctk.CTkEntry(self.input_ramme)
                     self.vin_input.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Inngangsspenning fase (grader):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsspenning fase (grader):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input = ctk.CTkEntry(self.input_ramme)
                     self.p_input.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 magnitude (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 magnitude (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 fase (grader):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 fase (grader):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 magnitude (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 magnitude (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=5, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 fase (grader):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 fase (grader):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 magnitude (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 magnitude (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input3 = ctk.CTkEntry(self.input_ramme)
                     self.r_input3.grid(row=7, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 fase (grader):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 fase (grader):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input3 = ctk.CTkEntry(self.input_ramme)
                     self.p_input3.grid(row=8, column=1, padx=10, pady=5)
 
                 else:
                     # Input for Rektangulær form
-                    ctk.CTkLabel(self.input_frame, text="Inngangsspenning reell del (V):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.vin_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsspenning reell del (V):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.vin_input = ctk.CTkEntry(self.input_ramme)
                     self.vin_input.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Inngangsspenning imaginær del (V):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsspenning imaginær del (V):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input = ctk.CTkEntry(self.input_ramme)
                     self.p_input.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 reell del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 reell del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 imaginær del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 imaginær del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 reell del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 reell del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=5, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 imaginær del (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 imaginær del (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 reell del (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 reell del (Ω):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input3 = ctk.CTkEntry(self.input_ramme)
                     self.r_input3.grid(row=7, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 imaginær del (Ω):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input3 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 imaginær del (Ω):").grid(row=8, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input3 = ctk.CTkEntry(self.input_ramme)
                     self.p_input3.grid(row=8, column=1, padx=10, pady=5)
 
                 # Beregn-knapp plassert med grid()
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn VDR", command=self.beregn_vdr)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn VDR", command=self.beregn_vdr)
                 beregn_knapp.grid(row=9, column=0, columnspan=2, pady=20)
 
 
@@ -602,72 +600,72 @@ class KalkulatorApp:
                 self.form_valg.pack(pady=5)  # Vis komboboksen for formvalg for AC
 
                 if self.form_valg.get() == "Polar":
-                    ctk.CTkLabel(self.input_frame, text="Inngangsstrøm magnitude (A):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.vin_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsstrøm magnitude (A):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.vin_input = ctk.CTkEntry(self.input_ramme)
                     self.vin_input.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Inngangsstrøm fase (grader):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsstrøm fase (grader):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input = ctk.CTkEntry(self.input_ramme)
                     self.p_input.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 magnitude (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 magnitude (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 fase (grader):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 fase (grader):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 magnitude (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 magnitude (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 fase (grader):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 fase (grader):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=5, column=1, padx=10, pady=5)
                     
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 magnitude (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 magnitude (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 fase (grader):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 fase (grader):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=7, column=1, padx=10, pady=5)
                 
                 else:  # For rektangulær form
-                    ctk.CTkLabel(self.input_frame, text="Inngangsstrøm reell del (A):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.vin_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsstrøm reell del (A):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.vin_input = ctk.CTkEntry(self.input_ramme)
                     self.vin_input.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Inngangsstrøm imaginær del (A):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Inngangsstrøm imaginær del (A):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input = ctk.CTkEntry(self.input_ramme)
                     self.p_input.grid(row=1, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 reell del (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 reell del (Ω):").grid(row=2, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input1 = ctk.CTkEntry(self.input_ramme)
                     self.r_input1.grid(row=2, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 1 imaginær del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input1 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 1 imaginær del (Ω):").grid(row=3, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input1 = ctk.CTkEntry(self.input_ramme)
                     self.p_input1.grid(row=3, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 reell del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 reell del (Ω):").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=4, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 2 imaginær del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 2 imaginær del (Ω):").grid(row=5, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=5, column=1, padx=10, pady=5)
                     
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 magnitude (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
-                    self.r_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 magnitude (Ω):").grid(row=6, column=0, padx=10, pady=5, sticky="e")
+                    self.r_input2 = ctk.CTkEntry(self.input_ramme)
                     self.r_input2.grid(row=6, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Impedans 3 fase (grader):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
-                    self.p_input2 = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Impedans 3 fase (grader):").grid(row=7, column=0, padx=10, pady=5, sticky="e")
+                    self.p_input2 = ctk.CTkEntry(self.input_ramme)
                     self.p_input2.grid(row=7, column=1, padx=10, pady=5)
 
-                beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn CDR", command=self.beregn_cdr)
+                beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn CDR", command=self.beregn_cdr)
                 beregn_knapp.grid(row=8, column=0, columnspan=2, pady=20)
 
             elif beregning == "Kap og Ind":
@@ -680,39 +678,39 @@ class KalkulatorApp:
                 self.komponent_valg.pack(pady=5)  # Vis komboboksen for formvalg for AC
 
                 if self.komponent_valg.get() == "Kondensator":
-                    ctk.CTkLabel(self.input_frame, text="Kapasitanse (F):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.c_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Kapasitanse (F):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.c_input = ctk.CTkEntry(self.input_ramme)
                     self.c_input.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Frekvens (f):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.f_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Frekvens (f):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.f_input = ctk.CTkEntry(self.input_ramme)
                     self.f_input.grid(row=1, column=1, padx=10, pady=5)
                     
-                    beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn Kondensator", command=self.beregn_kap_og_ind)
+                    beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn Kondensator", command=self.beregn_kap_og_ind)
                     beregn_knapp.grid(row=6, column=0, columnspan=2, pady=20)
 
                 elif self.komponent_valg.get() == "Spole":
-                    ctk.CTkLabel(self.input_frame, text="Induktans (H):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
-                    self.l_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Induktans (H):").grid(row=0, column=0, padx=10, pady=5, sticky="e")
+                    self.l_input = ctk.CTkEntry(self.input_ramme)
                     self.l_input.grid(row=0, column=1, padx=10, pady=5)
 
-                    ctk.CTkLabel(self.input_frame, text="Frekvens (f):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
-                    self.f_input = ctk.CTkEntry(self.input_frame)
+                    ctk.CTkLabel(self.input_ramme, text="Frekvens (f):").grid(row=1, column=0, padx=10, pady=5, sticky="e")
+                    self.f_input = ctk.CTkEntry(self.input_ramme)
                     self.f_input.grid(row=1, column=1, padx=10, pady=5)
-                    beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn Spole", command=self.beregn_kap_og_ind)
+                    beregn_knapp = ctk.CTkButton(self.input_ramme, text="Beregn Spole", command=self.beregn_kap_og_ind)
                     beregn_knapp.grid(row=6, column=0, columnspan=2, pady=20)
             
     
     def beregn_ohms_lov(self):
-        kalk_type = self.kalkvalg.get()  # Hent valgt kalkulatortype
+        kalk_type = self.kalk_valg.get()  # Hent valgt kalkulatortype
 
         try:
             # Hvis kalkulatoren er satt til DC
             if kalk_type == "DC":
-                U = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
-                I = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
-                R = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                P = self.konverter_prefiks(self.p_input.get()) if self.p_input.get() else None
+                U = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None # Hent spenning
+                I = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None # Hent strøm
+                R = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None # Hent motstand
+                P = self.konverter_prefiks(self.p_input.get()) if self.p_input.get() else None # Hent effekt
 
                 # Utfør beregninger basert på hvilke verdier som er oppgitt
                 if U and I:  # Hvis spenning og strøm er gitt
@@ -744,12 +742,12 @@ class KalkulatorApp:
 
             # Hvis kalkulatoren er satt til AC
             elif kalk_type == "AC":
-                U_mag = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
-                U_fase = math.radians(float(self.u_fase_input.get().replace(',', '.'))) if self.u_fase_input.get() else 0
-                Z_mag = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                Z_fase = math.radians(float(self.z_fase_input.get().replace(',', '.'))) if self.z_fase_input.get() else 0
-                I_mag = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
-                I_fase = math.radians(float(self.i_fase_input.get().replace(',', '.'))) if self.i_fase_input.get() else 0
+                U_mag = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None # Hent spenningens magnitude
+                U_fase = math.radians(float(self.u_fase_input.get().replace(',', '.'))) if self.u_fase_input.get() else 0 # Konverter til radianer
+                Z_mag = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None # Hent impedansens magnitude
+                Z_fase = math.radians(float(self.z_fase_input.get().replace(',', '.'))) if self.z_fase_input.get() else 0 # Konverter til radianer
+                I_mag = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None # Hent strømmens magnitude
+                I_fase = math.radians(float(self.i_fase_input.get().replace(',', '.'))) if self.i_fase_input.get() else 0 # Konverter til radianer
 
                 # Polar form
                 if self.form_valg.get() == "Polar":
@@ -768,23 +766,23 @@ class KalkulatorApp:
 
                 # Rektangulær form
                 else:
-                    U_re = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
-                    U_im = self.konverter_prefiks(self.u_fase_input.get()) if self.u_fase_input.get() else None
-                    Z_re = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                    Z_im = self.konverter_prefiks(self.z_fase_input.get()) if self.z_fase_input.get() else None
-                    I_re = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
-                    I_im = self.konverter_prefiks(self.i_fase_input.get()) if self.i_fase_input.get() else None
+                    U_re = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None # Hent spenningens reelle del
+                    U_im = self.konverter_prefiks(self.u_fase_input.get()) if self.u_fase_input.get() else None # Hent spenningens imaginære del
+                    Z_re = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None # Hent impedansens reelle del
+                    Z_im = self.konverter_prefiks(self.z_fase_input.get()) if self.z_fase_input.get() else None # Hent impedansens imaginære del
+                    I_re = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None # Hent strømmens reelle del
+                    I_im = self.konverter_prefiks(self.i_fase_input.get()) if self.i_fase_input.get() else None # Hent strømmens imaginære del
 
                     if U_re and Z_re:  # Hvis spenning (U) og impedans (Z) er gitt
-                        U = complex(U_re, U_im)
-                        Z = complex(Z_re, Z_im)
+                        U = complex(U_re, U_im) # Konverter til komplekst tall
+                        Z = complex(Z_re, Z_im) 
                         I = U / Z  # Beregn strøm
                     elif U_re and I_re:  # Hvis spenning (U) og strøm (I) er gitt
-                        U = complex(U_re, U_im)
+                        U = complex(U_re, U_im) # Konverter til komplekst tall
                         I = complex(I_re, I_im)
                         Z = U / I  # Beregn impedans
                     elif Z_re and I_re:  # Hvis impedans (Z) og strøm (I) er gitt
-                        Z = complex(Z_re, Z_im)
+                        Z = complex(Z_re, Z_im) # Konverter til komplekst tall
                         I = complex(I_re, I_im)
                         U = I * Z  # Beregn spenning
 
@@ -803,82 +801,82 @@ class KalkulatorApp:
             messagebox.showerror("Input Feil", str(e))
 
     def beregn_seriekobling(self):
-        kalk_type = self.kalkvalg.get()
+        kalk_type = self.kalk_valg.get()
         try:
-            if kalk_type == "DC":
-                R1 = self.konverter_prefiks(self.r_input1.get())
-                R2 = self.konverter_prefiks(self.r_input2.get())
-                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0
-                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0
-                R_total = R1 + R2 + R3 + R4
-                self.resultat_label.configure(text=f"Rtotal = {self.formater_resultat(R_total)} Ω")
+            if kalk_type == "DC": # Hvis kalkulatoren er satt til DC
+                R1 = self.konverter_prefiks(self.r_input1.get()) # Hent motstand 1
+                R2 = self.konverter_prefiks(self.r_input2.get()) # Hent motstand 2
+                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0 # Hent motstand 3
+                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0 # Hent motstand 4
+                R_total = R1 + R2 + R3 + R4 # Beregn total motstand
+                self.resultat_label.configure(text=f"Rtotal = {self.formater_resultat(R_total)} Ω") # Vis total motstand
             
             elif kalk_type == "AC":    
-                Z_total = 0 + 0j  # Start med 0 + 0j
+                Z_total = 0 + 0j # Start med 0 + 0j
 
-                for impedans_input, fase_input in [(self.r_input1, self.p_input1), (self.r_input2, self.p_input2), (self.r_input3, self.p_input3), (self.r_input4, self.p_input4)]:
-                    if impedans_input.get():
-                        if self.form_valg.get() == "Polar":
-                            Z_mag = self.konverter_prefiks(impedans_input.get())
-                            Z_fase = math.radians(float(fase_input.get().replace(',', '.')))
-                            Z = cmath.rect(Z_mag, Z_fase)
+                for impedans_input, fase_input in [(self.r_input1, self.p_input1), (self.r_input2, self.p_input2), (self.r_input3, self.p_input3), (self.r_input4, self.p_input4)]: # Gå gjennom inputfeltene for impedans og fase
+                    if impedans_input.get(): # Hvis inputfeltet for impedans ikke er tomt
+                        if self.form_valg.get() == "Polar": # Hvis formvalget er satt til Polar
+                            Z_mag = self.konverter_prefiks(impedans_input.get()) # Hent impedansens magnitude
+                            Z_fase = math.radians(float(fase_input.get().replace(',', '.'))) # Hent impedansens fase og konverter til radianer
+                            Z = cmath.rect(Z_mag, Z_fase) # Konverter fra polar til rektangulær form
                         else:
-                            Z_re = self.konverter_prefiks(impedans_input.get())
-                            Z_im = self.konverter_prefiks(fase_input.get())
-                            Z = complex(Z_re, Z_im)
+                            Z_re = self.konverter_prefiks(impedans_input.get()) # Hent impedansens reelle del
+                            Z_im = self.konverter_prefiks(fase_input.get()) # Hent impedansens imaginære del
+                            Z = complex(Z_re, Z_im) # Konverter til komplekst tall
                         Z_total += Z
 
-                self.resultat_label.configure(text=f"Z_total = {self.formater_resultat(abs(Z_total))} ∠ {math.degrees(cmath.phase(Z_total)):.2f}° Ω")
+                self.resultat_label.configure(text=f"Z_total = {self.formater_resultat(abs(Z_total))} ∠ {math.degrees(cmath.phase(Z_total)):.2f}° Ω") # Vis total impedans
         
-        except ValueError as e:
+        except ValueError as e: # Hvis det oppstår en ValueError
             messagebox.showerror("Input Feil", str(e))
             
-    def beregn_parallellkobling(self):
-        kalk_type = self.kalkvalg.get()
+    def beregn_parallellkobling(self): # Beregning for parallellkobling
+        kalk_type = self.kalk_valg.get() 
         try:
-            if kalk_type == "DC":
-                R1 = self.konverter_prefiks(self.r_input1.get())
-                R2 = self.konverter_prefiks(self.r_input2.get())
-                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else None
-                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else None
+            if kalk_type == "DC": # Hvis kalkulatoren er satt til DC
+                R1 = self.konverter_prefiks(self.r_input1.get())    # Hent motstand 1
+                R2 = self.konverter_prefiks(self.r_input2.get())    # Hent motstand 2
+                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else None   # Hent motstand 3
+                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else None   # Hent motstand 4
 
-                if R3 and R4:
-                    R_total = 1 / ((1 / R1) + (1 / R2) + (1 / R3) + (1 / R4))
-                elif R3:
-                    R_total = 1 / ((1 / R1) + (1 / R2) + (1 / R3))
-                else:
-                    R_total = 1 / ((1 / R1) + (1 / R2))
+                if R3 and R4:   # Hvis motstand 3 og 4 er gitt
+                    R_total = 1 / ((1 / R1) + (1 / R2) + (1 / R3) + (1 / R4))   # Beregn total motstand
+                elif R3:    # Hvis bare motstand 3 er gitt
+                    R_total = 1 / ((1 / R1) + (1 / R2) + (1 / R3))  # Beregn total motstand
+                else:  # Hvis bare motstand 1 og 2 er gitt
+                    R_total = 1 / ((1 / R1) + (1 / R2))   # Beregn total motstand
 
-                self.resultat_label.configure(text=f"Rtotal = {self.formater_resultat(R_total)} Ω")   
+                self.resultat_label.configure(text=f"Rtotal = {self.formater_resultat(R_total)} Ω")     # Vis total motstand
             
-            elif kalk_type == "AC":
-                Z_total_inv = 0 + 0j  # Start med 0 + 0j
+            elif kalk_type == "AC":   # Hvis kalkulatoren er satt til AC
+                Z_total_inv = 0 + 0j  # Start med 0 + 0j    
 
-                for impedans_input, fase_input in [(self.r_input1, self.p_input1), (self.r_input2, self.p_input2), (self.r_input3, self.p_input3), (self.r_input4, self.p_input4)]:
-                    if impedans_input.get():
-                        if self.form_valg.get() == "Polar":
-                            Z_mag = self.konverter_prefiks(impedans_input.get())
-                            Z_fase = math.radians(float(fase_input.get().replace(',', '.')))
-                            Z = cmath.rect(Z_mag, Z_fase)
+                for impedans_input, fase_input in [(self.r_input1, self.p_input1), (self.r_input2, self.p_input2), (self.r_input3, self.p_input3), (self.r_input4, self.p_input4)]:   # Gå gjennom inputfeltene for impedans og fase
+                    if impedans_input.get():   # Hvis inputfeltet for impedans ikke er tomt
+                        if self.form_valg.get() == "Polar":  # Hvis formvalget er satt til Polar
+                            Z_mag = self.konverter_prefiks(impedans_input.get())    # Hent impedansens magnitude
+                            Z_fase = math.radians(float(fase_input.get().replace(',', '.')))    # Hent impedansens fase og konverter til radianer
+                            Z = cmath.rect(Z_mag, Z_fase)   # Konverter fra polar til rektangulær form
                         else:
-                            Z_re = self.konverter_prefiks(impedans_input.get())
-                            Z_im = self.konverter_prefiks(fase_input.get())
-                            Z = complex(Z_re, Z_im)
-                        Z_total_inv += 1 / Z
+                            Z_re = self.konverter_prefiks(impedans_input.get())   # Hent impedansens reelle del
+                            Z_im = self.konverter_prefiks(fase_input.get())  # Hent impedansens imaginære del
+                            Z = complex(Z_re, Z_im)   # Konverter til komplekst tall
+                        Z_total_inv += 1 / Z        # Beregn den inverse av total impedans
 
-                if Z_total_inv == 0:
-                    raise ValueError("Ingen gyldige impedanser oppgitt.")
+                if Z_total_inv == 0:    
+                    raise ValueError("Ingen gyldige impedanser oppgitt.")   # Gi en feilmelding hvis total impedans er null
 
-                Z_total = 1 / Z_total_inv
+                Z_total = 1 / Z_total_inv   # Beregn total impedans
 
-                self.resultat_label.configure(text=f"Z_total = {self.formater_resultat(abs(Z_total))} ∠ {math.degrees(cmath.phase(Z_total)):.2f}° Ω")
+                self.resultat_label.configure(text=f"Z_total = {self.formater_resultat(abs(Z_total))} ∠ {math.degrees(cmath.phase(Z_total)):.2f}° Ω")   # Vis total impedans
       
         
-        except ValueError as e:
-            messagebox.showerror("Input Feil", str(e))
+        except ValueError as e: # Hvis det oppstår en ValueError
+            messagebox.showerror("Input Feil", str(e))  # Vis feilmelding i en messagebox
             
     def beregn_vdr(self):
-        kalk_type = self.kalkvalg.get()
+        kalk_type = self.kalk_valg.get()
         try:
             if kalk_type == "DC":
                 V_in = self.konverter_prefiks(self.vin_input.get())
@@ -943,7 +941,7 @@ class KalkulatorApp:
             messagebox.showerror("Input Feil", str(e))
             
     def beregn_cdr(self):
-        kalk_type = self.kalkvalg.get()
+        kalk_type = self.kalk_valg.get()
         try:
             if kalk_type == "DC":
                 I_in = self.konverter_prefiks(self.iin_input.get())
