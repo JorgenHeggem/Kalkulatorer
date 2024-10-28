@@ -27,6 +27,19 @@ class KalkulatorApp:
         self.r_input1 = None
         self.r_input2 = None
         self.r_input3 = None
+        self.r_input4 = None
+        self.u_fase_input = None
+        self.i_fase_input = None    
+        self.r_fase_input = None    
+        self.z_fase_input = None
+        self.r_input1 = None
+        self.r_input2 = None
+        self.r_input3 = None
+        self.r_input4 = None    
+        self.p_input1 = None
+        self.p_input2 = None
+        self.p_input3 = None
+        self.p_input4 = None
         self.form_valg = "Polar"  # Standard for AC form er polar
 
         # Opprett GUI-elementer
@@ -188,8 +201,7 @@ class KalkulatorApp:
                 dc_fields = [
                     ("Spenning (V):", "u_input"),
                     ("Strøm (A):", "i_input"),
-                    ("Motstand (Ω):", "r_input"),
-                    ("Effekt (W):", "p_input")
+                    ("Motstand (Ω):", "r_input")
                 ]
                 self.setup_gui_fields(dc_fields)
                 beregn_knapp = ctk.CTkButton(self.input_frame, text="Beregn", command=self.beregn_ohms_lov)
@@ -426,7 +438,7 @@ class KalkulatorApp:
                 U = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
                 I = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
                 R = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                P = self.konverter_prefiks(self.p_input.get()) if self.p_input.get() else None
+                
 
                 # Utfør beregninger basert på hvilke verdier som er oppgitt
                 if U and I:  # Hvis spenning og strøm er gitt
@@ -434,18 +446,12 @@ class KalkulatorApp:
                     P = U * I
                 elif U and R:  # Hvis spenning og motstand er gitt
                     I = U / R
-                    P = (U ** 2) / R
+                    P = U * U / R
                 elif I and R:  # Hvis strøm og motstand er gitt
                     U = I * R
-                    P = (I ** 2) * R
-                elif P and I:  # Hvis effekt og strøm er gitt
-                    U = P / I
-                    R = U / I
-                elif P and U:  # Hvis effekt og spenning er gitt
-                    I = P / U
-                    R = U / I
+                    P = I * I * R
 
-                if not any([U, I, R, P]):  # Hvis ingen verdier er gitt
+                if not any([U, I, R]):  # Hvis ingen verdier er gitt
                     raise ValueError("Fyll inn minst to verdier for å beregne de andre.")
 
                 # Formater resultatet og vis det i GUI
@@ -459,11 +465,11 @@ class KalkulatorApp:
             # Hvis kalkulatoren er satt til AC
             elif kalk_type == "AC":
                 U_mag = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
-                U_fase = math.radians(float(self.u_fase_input.get().replace(',', '.'))) if self.u_fase_input.get() else 0
+                U_fase = math.radians(float(self.u_fase_input.get().replace(',', '.'))) if self.u_fase_input.get() else None
                 Z_mag = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                Z_fase = math.radians(float(self.z_fase_input.get().replace(',', '.'))) if self.z_fase_input.get() else 0
+                Z_fase = math.radians(float(self.z_fase_input.get().replace(',', '.'))) if self.z_fase_input.get() else None
                 I_mag = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
-                I_fase = math.radians(float(self.i_fase_input.get().replace(',', '.'))) if self.i_fase_input.get() else 0
+                I_fase = math.radians(float(self.i_fase_input.get().replace(',', '.'))) if self.i_fase_input.get() else None
 
                 # Polar form
                 if self.form_valg.get() == "Polar":
@@ -520,10 +526,10 @@ class KalkulatorApp:
         kalk_type = self.kalkvalg.get()
         try:
             if kalk_type == "DC":
-                R1 = self.konverter_prefiks(self.r_input1.get())
-                R2 = self.konverter_prefiks(self.r_input2.get())
-                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0
-                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0
+                R1 = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else 0.0
+                R2 = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else 0.0
+                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0.0
+                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0.0
                 R_total = R1 + R2 + R3 + R4
                 self.resultat_label.configure(text=f"Rtotal = {self.formater_resultat(R_total)} Ω")
             
@@ -551,8 +557,8 @@ class KalkulatorApp:
         kalk_type = self.kalkvalg.get()
         try:
             if kalk_type == "DC":
-                R1 = self.konverter_prefiks(self.r_input1.get())
-                R2 = self.konverter_prefiks(self.r_input2.get())
+                R1 = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else None
+                R2 = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else None
                 R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else None
                 R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else None
 
@@ -598,8 +604,8 @@ class KalkulatorApp:
                 V_in = self.konverter_prefiks(self.vin_input.get())
                 R1 = self.konverter_prefiks(self.r_input1.get())
                 R2 = self.konverter_prefiks(self.r_input2.get())
-                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0
-                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0
+                R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0.0
+                R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0.0
 
                 R_total = R1 + R2 + R3 + R4
                 V_R1 = V_in * R1 / R_total
@@ -611,44 +617,44 @@ class KalkulatorApp:
                     text=f"UR1 = {self.formater_resultat(V_R1)} V\nUR2 = {self.formater_resultat(V_R2)} V\nUR3 = {self.formater_resultat(V_R3)} V\nUR4 = {self.formater_resultat(V_R4)} V")
             elif kalk_type == "AC":
                 if self.form_valg.get() == "Polar":
-                    Vin_mag = self.konverter_prefiks(self.vin_input.get()) if self.vin_input.get() else 0
-                    Vin_fase = math.radians(float(self.p_input.get().replace(',', '.'))) if self.p_input.get() else 0
+                    Vin_mag = self.konverter_prefiks(self.vin_input.get())
+                    Vin_fase = math.radians(float(self.p_input.get().replace(',', '.')))
                     Vin = cmath.rect(Vin_mag, Vin_fase)
 
-                    Z1_mag = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else 0
-                    Z1_fase = math.radians(float(self.p_input1.get().replace(',', '.'))) if self.p_input1.get() else 0
+                    Z1_mag = self.konverter_prefiks(self.r_input1.get())
+                    Z1_fase = math.radians(float(self.p_input1.get().replace(',', '.')))
                     Z1 = cmath.rect(Z1_mag, Z1_fase)
 
-                    Z2_mag = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else 0
-                    Z2_fase = math.radians(float(self.p_input2.get().replace(',', '.'))) if self.p_input2.get() else 0
+                    Z2_mag = self.konverter_prefiks(self.r_input2.get())
+                    Z2_fase = math.radians(float(self.p_input2.get().replace(',', '.')))
                     Z2 = cmath.rect(Z2_mag, Z2_fase)
 
-                    Z3_mag = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0
-                    Z3_fase = math.radians(float(self.p_input3.get().replace(',', '.'))) if self.p_input3.get() else 0
+                    Z3_mag = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0.0
+                    Z3_fase = math.radians(float(self.p_input3.get().replace(',', '.'))) if self.p_input3.get() else 0.0
                     Z3 = cmath.rect(Z3_mag, Z3_fase)
                     
-                    Z4_mag = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0
-                    Z4_fase = math.radians(float(self.p_input4.get().replace(',', '.'))) if self.p_input4.get() else 0
+                    Z4_mag = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0.0
+                    Z4_fase = math.radians(float(self.p_input4.get().replace(',', '.'))) if self.p_input4.get() else 0.0
                     Z4 = cmath.rect(Z4_mag, Z4_fase)
                 else:  # Rektangulær form
-                    Vin_re = self.konverter_prefiks(self.vin_input.get()) if self.vin_input.get() else 0
-                    Vin_im = self.konverter_prefiks(self.p_input.get()) if self.p_input.get() else 0
+                    Vin_re = self.konverter_prefiks(self.vin_input.get())
+                    Vin_im = self.konverter_prefiks(self.p_input.get())
                     Vin = complex(Vin_re, Vin_im)
 
-                    Z1_re = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else 0
-                    Z1_im = self.konverter_prefiks(self.p_input1.get()) if self.p_input1.get() else 0
+                    Z1_re = self.konverter_prefiks(self.r_input1.get())
+                    Z1_im = self.konverter_prefiks(self.p_input1.get())
                     Z1 = complex(Z1_re, Z1_im)
 
-                    Z2_re = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else 0
-                    Z2_im = self.konverter_prefiks(self.p_input2.get()) if self.p_input2.get() else 0
+                    Z2_re = self.konverter_prefiks(self.r_input2.get())
+                    Z2_im = self.konverter_prefiks(self.p_input2.get())
                     Z2 = complex(Z2_re, Z2_im)
 
-                    Z3_re = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0
-                    Z3_im = self.konverter_prefiks(self.p_input3.get()) if self.p_input3.get() else 0
+                    Z3_re = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0.0
+                    Z3_im = self.konverter_prefiks(self.p_input3.get()) if self.p_input3.get() else 0.0
                     Z3 = complex(Z3_re, Z3_im)
                     
-                    Z4_re = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0
-                    Z4_im = self.konverter_prefiks(self.p_input4.get()) if self.p_input4.get() else 0
+                    Z4_re = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0.0
+                    Z4_im = self.konverter_prefiks(self.p_input4.get()) if self.p_input4.get() else 0.0
                     Z4 = complex(Z4_re, Z4_im)
 
                 Z_total = Z1 + Z2 + Z3
@@ -670,9 +676,9 @@ class KalkulatorApp:
         kalk_type = self.kalkvalg.get()
         try:
             if kalk_type == "DC":
-                I_in = self.konverter_prefiks(self.iin_input.get())
-                R1 = self.konverter_prefiks(self.r_input1.get())
-                R2 = self.konverter_prefiks(self.r_input2.get())
+                I_in = self.konverter_prefiks(self.iin_input.get()) if self.iin_input.get() else None
+                R1 = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else None
+                R2 = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else None
                 R3 = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else None
                 R4 = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else None
 
@@ -697,44 +703,44 @@ class KalkulatorApp:
             
             elif kalk_type == "AC":
                 if self.form_valg.get() == "Polar":
-                    Iin_mag = self.konverter_prefiks(self.vin_input.get()) if self.vin_input.get() else 0.0
-                    Iin_fase = math.radians(float(self.p_input.get().replace(',', '.'))) if self.p_input.get() else 0.0
+                    Iin_mag = self.konverter_prefiks(self.vin_input.get()) if self.vin_input.get() else None
+                    Iin_fase = math.radians(float(self.p_input.get().replace(',', '.'))) if self.p_input.get() else None
                     Iin = cmath.rect(Iin_mag, Iin_fase)
 
-                    Z1_mag = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else 0.0
-                    Z1_fase = math.radians(float(self.p_input1.get().replace(',', '.'))) if self.p_input1.get() else 0.0
+                    Z1_mag = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else None
+                    Z1_fase = math.radians(float(self.p_input1.get().replace(',', '.'))) if self.p_input1.get() else None
                     Z1 = cmath.rect(Z1_mag, Z1_fase)
 
-                    Z2_mag = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else 0.0
-                    Z2_fase = math.radians(float(self.p_input2.get().replace(',', '.'))) if self.p_input2.get() else 0.0
+                    Z2_mag = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else None
+                    Z2_fase = math.radians(float(self.p_input2.get().replace(',', '.'))) if self.p_input2.get() else None
                     Z2 = cmath.rect(Z2_mag, Z2_fase)
                     
-                    Z3_mag = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0.0
-                    Z3_fase = math.radians(float(self.p_input3.get().replace(',', '.'))) if self.p_input3.get() else 0.0
+                    Z3_mag = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else None
+                    Z3_fase = math.radians(float(self.p_input3.get().replace(',', '.'))) if self.p_input3.get() else None
                     Z3 = cmath.rect(Z3_mag, Z3_fase)
                     
-                    Z4_mag = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0.0
-                    Z4_fase = math.radians(float(self.p_input4.get().replace(',', '.'))) if self.p_input4.get() else 0.0
+                    Z4_mag = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else None
+                    Z4_fase = math.radians(float(self.p_input4.get().replace(',', '.'))) if self.p_input4.get() else None
                     Z4 = cmath.rect(Z4_mag, Z4_fase)
                 else:  # Rektangulær form
-                    Iin_re = self.konverter_prefiks(self.vin_input.get()) if self.vin_input.get() else 0.0
-                    Iin_im = self.konverter_prefiks(self.p_input.get()) if self.p_input.get() else 0.0
+                    Iin_re = self.konverter_prefiks(self.vin_input.get()) if self.vin_input.get() else None
+                    Iin_im = self.konverter_prefiks(self.p_input.get()) if self.p_input.get() else None
                     Iin = complex(Iin_re, Iin_im)
 
-                    Z1_re = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else 0.0
-                    Z1_im = self.konverter_prefiks(self.p_input1.get()) if self.p_input1.get() else 0.0
+                    Z1_re = self.konverter_prefiks(self.r_input1.get()) if self.r_input1.get() else None
+                    Z1_im = self.konverter_prefiks(self.p_input1.get()) if self.p_input1.get() else None
                     Z1 = complex(Z1_re, Z1_im)
 
-                    Z2_re = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else 0.0
-                    Z2_im = self.konverter_prefiks(self.p_input2.get()) if self.p_input2.get() else 0.0
+                    Z2_re = self.konverter_prefiks(self.r_input2.get()) if self.r_input2.get() else None
+                    Z2_im = self.konverter_prefiks(self.p_input2.get()) if self.p_input2.get() else None
                     Z2 = complex(Z2_re, Z2_im)
                     
-                    Z3_re = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else 0.0
-                    Z3_im = self.konverter_prefiks(self.p_input3.get()) if self.p_input3.get() else 0.0
+                    Z3_re = self.konverter_prefiks(self.r_input3.get()) if self.r_input3.get() else None
+                    Z3_im = self.konverter_prefiks(self.p_input3.get()) if self.p_input3.get() else None
                     Z3 = complex(Z3_re, Z3_im)
                     
-                    Z4_re = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else 0.0
-                    Z4_im = self.konverter_prefiks(self.p_input4.get()) if self.p_input4.get() else 0.0
+                    Z4_re = self.konverter_prefiks(self.r_input4.get()) if self.r_input4.get() else None
+                    Z4_im = self.konverter_prefiks(self.p_input4.get()) if self.p_input4.get() else None
                     Z4 = complex(Z4_re, Z4_im)
 
                 Z_total_inv = 1 / Z1 + 1 / Z2 + 1 / Z3 + 1 / Z4
