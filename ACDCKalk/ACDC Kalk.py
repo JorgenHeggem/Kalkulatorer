@@ -111,7 +111,7 @@ class KalkulatorApp:
         self.notater_boks.pack(fill="both", expand=True, padx=10, pady=10)
 
         # Legg til tekst ved oppstart
-        prefiks_tekst = "Støttede prefikser: T, G, M, k, m, µ, n\n\n"
+        prefiks_tekst = "Støttede prefikser: T, G, M, k, m, µ, n, p\n\n"
         self.notater_boks.insert("0.0", prefiks_tekst)
         
         # Light/Dark mode
@@ -141,6 +141,12 @@ class KalkulatorApp:
                 return float(verdi.replace('g', '')) * 1e9 # g = giga
             elif 'M' in verdi:
                 return float(verdi.replace('M', '')) * 1e6 # M = mega
+            elif 'T' in verdi:
+                return float(verdi.replace('T', '')) * 1e12
+            elif 'n' in verdi:
+                return float(verdi.replace('n', '')) * 1e-9
+            elif 'p' in verdi:
+                return float(verdi.replace('p', '')) * 1e-12
             else:
                 return float(verdi) # Ingen prefiks
         except ValueError:
@@ -149,7 +155,8 @@ class KalkulatorApp:
     def formater_resultat(self, verdi):
         enheter = [
             (1e-9, 'n'), (1e-6, 'µ'), (1e-3, 'm'), (1, ''), 
-            (1e3, 'k'), (1e6, 'M'), (1e9, 'G'), (1e12, 'T') 
+            (1e3, 'k'), (1e6, 'M'), (1e9, 'G'), (1e12, 'T'),
+            (1e-12, 'p') 
         ]
         for faktor, enhet in enheter:
             if abs(verdi) < faktor * 1000:
