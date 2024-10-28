@@ -113,9 +113,20 @@ class KalkulatorApp:
         # Legg til tekst ved oppstart
         prefiks_tekst = "Støttede prefikser: T, G, M, k, m, µ, n\n\n"
         self.notater_boks.insert("0.0", prefiks_tekst)
+        
+        # Light/Dark mode
+        self.mode = ctk.CTkSwitch(hoyre_ramme, text="Bakgrunn", command=self.oppdater_mode)
+        self.mode.pack(pady=10)
 
         # Start med standard beregning for DC
         self.oppdater_kalkulator()
+        
+    def oppdater_mode(self):
+        """Oppdaterer grensesnittets utseende basert på valgt modus."""
+        if self.mode.get() == 1:  # Switch er på
+            ctk.set_appearance_mode("Light")
+        else:  # Switch er av
+            ctk.set_appearance_mode("Dark")
 
     def konverter_prefiks(self, verdi):
         verdi = verdi.strip().replace(',', '.')
