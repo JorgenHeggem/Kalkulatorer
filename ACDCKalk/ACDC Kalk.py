@@ -456,7 +456,6 @@ class KalkulatorApp:
                 U = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
                 I = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
                 R = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                
 
                 # Utfør beregninger basert på hvilke verdier som er oppgitt
                 if U and I:  # Hvis spenning og strøm er gitt
@@ -485,7 +484,7 @@ class KalkulatorApp:
                 U_mag = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
                 U_fase = math.radians(float(self.u_fase_input.get().replace(',', '.'))) if self.u_fase_input.get() else None
                 Z_mag = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                Z_fase = math.radians(float(self.z_fase_input.get().replace(',', '.'))) if self.z_fase_input.get() else None
+                Z_fase = math.radians(float(self.z_fase_input.get().replace(',', '.'))) if self.z_fase_input and self.z_fase_input.get() else 0
                 I_mag = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
                 I_fase = math.radians(float(self.i_fase_input.get().replace(',', '.'))) if self.i_fase_input.get() else None
 
@@ -509,7 +508,7 @@ class KalkulatorApp:
                     U_re = self.konverter_prefiks(self.u_input.get()) if self.u_input.get() else None
                     U_im = self.konverter_prefiks(self.u_fase_input.get()) if self.u_fase_input.get() else None
                     Z_re = self.konverter_prefiks(self.r_input.get()) if self.r_input.get() else None
-                    Z_im = self.konverter_prefiks(self.z_fase_input.get()) if self.z_fase_input.get() else None
+                    Z_im = self.konverter_prefiks(self.z_fase_input.get()) if self.z_fase_input and self.z_fase_input.get() else None
                     I_re = self.konverter_prefiks(self.i_input.get()) if self.i_input.get() else None
                     I_im = self.konverter_prefiks(self.i_fase_input.get()) if self.i_fase_input.get() else None
 
@@ -536,7 +535,7 @@ class KalkulatorApp:
                         f"Z = {self.formater_resultat(abs(Z))} ∠ {math.degrees(cmath.phase(Z)):.2f}° Ω\n"
                         f"I = {self.formater_resultat(abs(I))} ∠ {math.degrees(cmath.phase(I)):.2f}° A"
                 )
-        
+
         except ValueError as e:
             messagebox.showerror("Input Feil", str(e))
 
